@@ -1,0 +1,336 @@
+types of users in linux
+root user
+user
+system user
+service users
+by default all users will be added to /home directory
+adduser username - to create user
+useradd username - to create user
+groupadd groupname - to create group
+userdel username - to delete user
+cat /etc/passwd - list all users
+getent passwd - list all users
+cat /etc/group - list all group
+getent group - list all group
+cat /etc/shadow - see credintial of user
+id - to find userid, groupid and user contained group information
+id username - info about userid, gid
+adduser -u 1234 username - to create user with specific uid
+user id of root user - 0
+head -1 /etc/passwd - check root user
+head -n -1 /etc/passwd - check root user
+user 7 fileds-> username, password, userID, groupID, comment, userDirectory and userShell
+last - it will find howmany users are signed in, ip address of user, from what time to till what time
+w and who - provide current logged in user informations
+su - siwtvh user from one user to another user
+visudo
+vim /etc/sudoers 
+adduser -m -d /opt/username username - create user with custom directory
+adduser -e YYYY-MM-DD username - it will determine account expiry data <tomorrow>
+chage -l username - it will password expiry information
+chage -m 10 username - password chnage frequency
+sudo chage -M 30 username - password expiry
+cat /etc/login.defs - defaualt user configuration
+passwd --lock username - it goign to lock user account to access server
+userdel --remove username
+passwd --delete usernam - dlete user password
+passwd -d username
+-c - command
+-d - home directory
+-e - expiry date
+-G - add user to multiple group
+-a -append
+-s specify login shells
+type os group:
+primary group
+secondary group
+id
+groups - it provide all group information
+groups username - specific user group names
+groupadd -g 1234 groupname - to create group with specific uid
+usermod -a -G groupname username - add user to group
+usermod -a -G groupname, groupname2 username - add multiple users to group
+usermod -g groupname username - to chnage primary group
+useradd -g primarygroup -G secondary1,secondary2 username - to add primary and secondary group together
+gpasswd -d username groupname
+groupdel groupname - to delete group
+last username - check howmany time user accessed to this vm
+lastb - give bad logins to vm
+lastlog - last logged in time of users
+var/log/utmp – It contains information about users who are currently logged in
+var/log/utmw – It contains the history of all logged-in users
+var/log/btmp – It keeps all bad login attempts
+in two way we can assign permission
+-----------------------------------
+a) absolute mode
+b) symbolic mode
+3 type of entity and 3 types of access mode
+USER, group, other users
+read write execution
+what is read -> user can read content of file
+what is write -> user can modify file
+what is execution -> user can run that file (eg: shell script file, or exe file)
+rwx rwx rwx
+421 421 421
+ 7   7   7
+0 - no permission
+1 - execution permission
+2 - write permission
+3 - write and execution permission
+4 - read permission
+5 - read and execution permission
+6 - read and write permission
+7 - read, write and execution permission(ALL permission are allowed)
+owner full permission, group read, other read?
+user group other users
+-rwx rwx rwx
+| |   |   |------ other users
+| |   |
+| |   |---------- groups
+| |
+| |-------------- current user (owner of file/directory)
+|
+|---------------- regular file(-) directories(d)
+create custom permission for user
+-----------------------------------
+chmod 777 filename - all permission for all entities
+symbolic mode
+--------------
+symbolic mode
+--------------
+u -> user
+g -> group
+o -> other users
+a -> all
+= -> assigning 
++ -> adding
+- -> removing
+chmod u+r file
+chmod ugo+rwx file
+chown(ownership of file)
+-------------------------
+chown username:groupname filename
+chgrp chnage group
+------
+to chnage group permission, can use "chgrp ec2-user filename"
+setfacl (set fire wall access control list) and getfacl (set fire wall access control list)
+--------------------------------------------------------------------------------------------
+getfacl - to get permission information of file or directory
+setfacl - to set permission for files/directory
+setfacl -m u:username:rwx filename
+sticky bit
+-----------
+When a directory's sticky bit is set, root user or file owner only can delete the file, hence it helps to prevent unintentional delete of file
+chmod 0000 file
+umask user file-creation mode mask
+-----
+to determine the file permission for newly created files. 
+execute umask
+set new umask - umask 0222
+to list all block devices
+-------------------------
+lsblk - list all storage block, which is attached to vm
+df -h - disk free units (it will print only mounted file system)
+df -hT - including type
+du - disk utelisation command
+du -a  including file and directories
+du -h human readable
+du -s summarise total usage
+du -sh * - disk utelization command
+fdiks - to do parition of master disk (fixed diks, format diks)
+fdiks -l it will print available partition on disk
+gdiks - for create disk partition
+sfdiks -l, parted -l
+cfdisk - this will give GUI
+blkid - it will print uuid(universally unique identifier) and partition type info
+blkid /dev/xvda1 - it will print specific block dev info
+monitor disk performance
+------------------------
+iostat - basic monitoring, eg:tps(trnsaction per second)
+iostat 2 4 - it will list 4 times in 2 second gap
+iotop - input and output table of power (by default not installed)
+dstat - input and output data info (by default not installed)
+atop - live monitoring disk
+ioping - /dev/xvda1 - ioping is a quick and dirty storage volume latency checker. 
+free -m - it will print ram info
+CPU UTELISATION COMMAND
+-----------------------
+cat /proc/cpuinfo - to get cpu harware information
+lscpu - print cpu architecture
+
+loadaverage - no of jobs w/i for io operation in 1 min avg an d5min avg na d15 min avg
+------------
+uptime - to find system load 
+top command
+ - z - to highlight running commands
+ - c - to get entire path of running commands
+ - d - to chnage delay, default 3.0
+ - k - to kill process
+ - shift+p - to sort cpu utelisation descending order
+ - H - for threads
+ - V - parent and child process
+htop (install)
+cat /proc/loadavg
+mpstat -P ALL 1 (-P process ALL - all process 1- 1 second gap)
+cpu stress command
+------------------
+install epel repository -> "yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
+install stress command -> "yum install stress"
+stress cpu -> "stress --cpu 9 --timeout 300"
+NICE
+Linux can run a lot of processes at a time, which can slow down the speed of some high priority processes and result in poor performance.
+To avoid this, you can tell your machine to prioritize processes as per your requirements. -20 to 0
+syntax
+------
+renice nice-value -p pid
+lst all process
+---------------
+ps -e
+ps -ef
+ps -ax
+ps -axu
+ps -ef | grep name
+ps pid -> chekc status of process
+find pid of process
+-------------------
+pidof process_name
+how to kill process
+--------------------
+kill pid
+kill -9 pid
+rm /proc/pid
+top command enter k and enter pid
+ip tables
+---------
+iptables is a user-space utility program that allows a system administrator to configure the IP packet filter rules of the Linux kernel firewall.
+FILTER – this is the default table, which contains the built in chains for:
+INPUT  – packages destined for local sockets
+FORWARD – packets routed through the system
+OUTPUT – packets generated locally
+iptable -L - list ip table
+iptables -L -n -v
+-L list
+-n numeric
+-v verbose
+ADD rule in ip table
+--------------------
+iptables -A INPUT -p tcp -s 157.45.37.140/32 --dport 22 -j ACCEPT/DEROP
+iptables -A INPUT -p tcp -s 49.37.162.60/32 --dport 80 -j DROP
+-A - append
+-D - detach
+-p - prptocol
+-s - source
+--deport - destination port
+-j - action accept or drop
+DELETE rule in ip tables
+------------------------
+iptables -D INPUT -p tcp -s  157.45.37.140/32 --dport 80 -j ACCEPT/DROP
+-A - append
+-D - detach
+-p - prptocol
+-s - source
+--deport - destination port
+-j - action accept or drop
+start, stop and restart
+-----------------------
+systemctl start iptables
+systemctl stop iptables
+systemctl restart iptables
+FIREWALL
+---------
+firewall is a network security system that monitors and controls incoming and outgoing network traffic 
+based on predetermined security rules.
+EXAMPE FOR FIREWALL
+-------------------
+FIREWALLD
+UFW
+install firewall
+-----------------
+sudo yum install -y firewalld
+sudo service firewalld start
+sudo systemctl enable firewalld
+sudo firewall-cmd --permanent --zone=public --add-port=80/tcp
+sudo firewall-cmd --reload
+sudo firewall-cmd --zone=public --list-ports
+sudo firewall --list-all
+sed command
+-----------
+to replace file content without open
+sed -i 's/old/new/g' /file - to replace all value 
+sed -i 's/old/new/2' /file - to replace second value
+find system architecture
+------------------------
+uanme -r
+5.10.147-133.644.amzn2.x86_64
+5-kernel version
+10-major vrsion
+147-minor version
+133.644 - path release
+amzn2.x86_64 - distro specific info
+wall command
+-----------
+wall "scheduled maintenance at 2.00 pm to 4.00pm"
+whoami
+------
+current loggedin user info
+find history commands
+----------------------
+history
+fc -l
+find commands
+--------------
+https://www.charactercountonline.com/
+find how many line in file
+--------------------------
+wc -l file
+find char count
+----------------
+wc -m file
+find a file and directory
+--------------------------
+find location -name filename
+find file
+---------
+find location -type f -name name-of-file
+find directory
+--------------
+find location -type d -name name-of-directory
+find file dir with specific permission
+------------------------------------------
+find /home/ec2-user/ -perm 777
+find file with executable permission
+----------------------------------------
+find location -executable -print
+find text files
+---------------
+find /home/ -name "*.txt" 
+
+to find all open port
+---------------------
+lsof -i -P -n | grep LISTEN
+i - ipv4
+P - port instead of port name
+n - no host name
+netstat -a(all)
+netstat -tp
+find a string on file
+----------------------
+grep ashiq /etc/passwd
+find string on all sub directory
+--------------------------------
+grep -r string /home/ec2-user
+suppress case sensitive
+-----------------------
+grep -i -r string *
+count string
+------------
+grep -i -r -c string *
+string line numbers
+-------------------
+grep -n string file
+tcpdump
+--------
+Tcpdump is a command line utility that allows you to capture and analyze network traffic going through your system. 
+It is often used to help troubleshoot network issues, as well as a security tool.
+tcpdump -i eth0 -c 10 
+tcpdump -i eth0 -c 10 port 80
