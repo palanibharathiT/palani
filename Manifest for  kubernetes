@@ -1,0 +1,86 @@
+---------------------------------------------MANIFEST------------------------------------------------------------------
+pod-commands: yml file
+
+kind: Pod
+apiVersion: v1
+metadata:
+ name: testpod
+spec:
+  containers:
+  - name: c00
+    image: ubuntu
+    command: ["/bin/bash", "-c", "while true; do echo Hello-pondicherry-vijay; sleep 5; done"]
+-------------------------------------------------------------------------------------------------------------------------------
+ReplicationController: yaml File
+
+kind: ReplicationController
+apiVersion: v1
+metadata:
+  name: myreplica
+spec:
+  replicas: 5
+  selector:
+      myname: vijay
+  template:
+    metadata:
+      name: testpod6
+      labels:
+        myname: vijay
+    spec:
+      containers:
+        - name: c00
+          image: ubuntu
+          command: ["/bin/bash", "-c", "while true; do echo Hello-pondicherry-vijay; sleep 5; done"]
+-----------------------------------------------------------------------------------------------------------------------------------------
+replica set : yaml File
+
+ kind: ReplicaSet
+apiVersion: apps/v1
+metadata:
+  name: myrs
+spec:
+  replicas: 2
+  selector:
+    matchExpressions:
+    - key: myname
+     - operator: In
+     - values: [Bsoft, Baft, Boft, Roof]
+    - key: env
+     - operator: NotIn
+      -values: [Production]
+  template:
+    metadata:
+      name: testpod
+      labels:
+        myname: Younus
+    spec:
+      containers:
+      - name: mycontainer
+        image: ubuntu
+        command: ["/bin/bash", "-c", "while true; do echo hello Younus; sleep 5; done"]
+-----------------------------------------------------------------------------------------------------------------------------------------------
+commcations between containers
+
+1. vi pod1.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: testpod2
+spec:
+  containers:
+    - name: c02
+      image: nginx
+      ports:
+        - containerPort: 80
+2. vi pod2.yml
+ apiVersion: v1
+kind: Pod
+metadata:
+  name: testpod2
+spec:
+  containers:
+    - name: c02
+      image: nginx
+      ports:
+        - containerPort: 80
+----------------------------------------------------------------------------------------------------------------------------------------------------------
